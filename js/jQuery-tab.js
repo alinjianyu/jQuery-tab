@@ -1,4 +1,9 @@
 $(document).ready(function() {
+	
+	$("#add_btn").click(function() {
+		addTab();
+	});
+	
 	$("#documents a").click(function() {
 		addTab($(this));
 	});
@@ -38,25 +43,54 @@ $(document).ready(function() {
 		}
 	});
 });
+
+var tabs = [];
 function addTab(link) {
-	// If tab already exist in the list, return
-	if ($("#" + $(link).attr("rel")).length != 0)
-		return;
+	
+	if(link!=undefined){
+		// If tab already exist in the list, return
+		if ($("#" + $(link).attr("rel")).length != 0){
+			return;		
+		}
+		
+		// hide other tabs
+		$("#tabs li").removeClass("current");
+		$("#content p").hide();
 
-	// hide other tabs
-	$("#tabs li").removeClass("current");
-	$("#content p").hide();
+		// add new tab and related content
+		$("#tabs").append(
+				"<li class='current'><a class='tab' id='" + $(link).attr("rel")
+						+ "' href='#'>" + $(link).html()
+						+ "</a><a href='#' class='remove'>x</a></li>");
 
-	// add new tab and related content
-	$("#tabs").append(
-			"<li class='current'><a class='tab' id='" + $(link).attr("rel")
-					+ "' href='#'>" + $(link).html()
-					+ "</a><a href='#' class='remove'>x</a></li>");
+		$("#content").append(
+				"<p id='" + $(link).attr("rel") + "_content'>"
+						+ $(link).attr("title") + "</p>");
 
-	$("#content").append(
-			"<p id='" + $(link).attr("rel") + "_content'>"
-					+ $(link).attr("title") + "</p>");
+		// set the newly added tab as current
+		$("#" + $(link).attr("rel") + "_content").show();
+	}else{
+		var link = "Document";
+		var len = jQuery("#tabs li").length;
+		
+		len++;
+		
+	    if (jQuery("#"+link+len).length != 0){
+			return; 	
+		}
 
-	// set the newly added tab as current
-	$("#" + $(link).attr("rel") + "_content").show();
+		link = link+len;
+		
+		// hide other tabs
+		$("#tabs li").removeClass("current");
+		$("#content p").hide();
+
+		// add new tab and related content
+		$("#tabs").append("<li class='current'><a class='tab' id='" + link + "' href='#'>" + link
+						+ "</a><a href='#' class='remove'>x</a></li>");
+
+		$("#content").append("<p id='" + link + "_content'>"+ link + "</p>");
+
+		jQuery("#" + link + "_content").show();
+	}
 }
